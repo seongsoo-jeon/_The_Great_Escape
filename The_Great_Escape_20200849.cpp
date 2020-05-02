@@ -1,15 +1,17 @@
 ﻿#include <bangtal.h>
 
-SceneID title, scene1_0, scene1_1;
+SceneID title, scene1_0, scene1_1, titlere;
 SceneID scene20, scene21, scene22, scene23, scene24;
 SceneID scene30, scene31, scene32, scene33, scene34;
 SceneID scene40, scene41;
 SceneID ask;
 SceneID run1;
 SceneID ask1, ask2, ask2_2, askre, ask3, ask4;
-SceneID title2, exit, final1;
+SceneID title2, exit, final1, final3;
+SceneID stun1;
 
-SoundID theme, asd, foot, foot2, a1, a2, a3, a4, wolff, wolfff, open, glass;
+SoundID theme, asd, foot, foot2, a1, a2, a3, a4,wolff, wolfff, open, glass, hit;
+SoundID ending;
 
 TimerID timer1;
 
@@ -25,7 +27,8 @@ ObjectID ask2_3;
 ObjectID door3;
 ObjectID Scene40, Scene41;
 ObjectID class1, book, pensil, dic;
-ObjectID asker3, askerre, ask4_1, exit1, umb, final2;
+ObjectID asker3, askerre, ask4_1, exit1, umb, final2, final4;
+ObjectID re, stun2;
 
 bool closed1 = true;
 bool closed2 = true;
@@ -299,10 +302,27 @@ void mouseCallback(ObjectID object, int x, int y, MouseAction action) {
 		playSound(theme);
 	}
 	else if (object == exit1) {
-		enterScene(final1);
+	enterScene(stun1);
+	stopSound(theme);
+	stopSound(a4);
+	playSound(hit);
+	}
+	else if (object == stun2) {
+	enterScene(titlere);
+	playSound(theme);
+	stopSound(hit);
+	showMessage("으음... 여긴 어디지?");
+	}
+	else if (object == re) {
+	enterScene(final1);
+	stopSound(theme);
+	playSound(ending);
 	}
 	else if (object == final2) {
-		endGame();
+	enterScene(final3);
+	}
+	else if (object == final4) {
+	endGame();
 	}
 }
 void objectCallback(ObjectID object, EventID event) {
@@ -329,10 +349,6 @@ void objectCallback(ObjectID object, EventID event) {
 			enterScene(askre);
 		}
 	}
-	else if (object == exit1) {
-		enterScene(final1);
-		stopSound(theme);
-	}
 }
 void timerCallback(TimerID timer) {
 	if (timer == timer1) {
@@ -347,7 +363,10 @@ int main() {
 	setMouseCallback(mouseCallback);
 	setTimerCallback(timerCallback);
 	setObjectCallback(objectCallback);
+	
 
+	stun1 = createScene("납치", "기절.png");
+	stun2 = CreateObject("기절.png", stun1, 0, 0);
 
 	ask = createScene("진실의 방", "질문자.png");
 	ask2 = createScene("진실의 방", "질문자.png");
@@ -368,12 +387,15 @@ int main() {
 	exit1 = CreateObject("출구.png", exit, 0, 0);
 	umb = createObject("우산.png");
 
-	final1 = createScene("final.png");
+	final1 = createScene("final", "final.png");
 	final2 = CreateObject("final.png", final1, 0, 0);
 
 	title = createScene("title", "배경.png");
 	scene1_0 = createScene("납치", "시작배경.png");
 	scene1_1 = createScene("납치", "시작배경.png");
+	titlere = createScene("납치", "마지막.png");
+	re = CreateObject("마지막.png", titlere, 0, 0);
+
 	run1 = createScene("도망", "시작배경.png");
 	scene20 = createScene("복도", "복도.png");
 	scene21 = createScene("복도", "복도_1.png");
@@ -454,12 +476,13 @@ int main() {
 
 	act1 = createObject("배경효과.png");
 	locateObject(act1, scene1_0, 0, 0);
-
+	
 	title2 = createScene("title2", "title2.jpg");
 	class1 = CreateObject("title2.jpg", title2, 0, 0);
 	book = createObject("책.png");
 	pensil = createObject("연필.png");
 	dic = createObject("사전.png");
+
 
 	theme = createSound("배경음악.mp3");
 	asd = createSound("쾅쾅.mp3");
@@ -474,11 +497,17 @@ int main() {
 	a2 = createSound("문제2.mp3");
 	a3 = createSound("문제3.mp3");
 	a4 = createSound("문제4.mp3");
+	ending = createSound("end.mp3");
 
 	open = createSound("문소리.mp3");
 
 	glass = createSound("유리.mp3");
 
+	hit = createSound("맞는소리.mp3");
+
+	final3 = createScene("final", "final2.png");
+	final4 = CreateObject("final2.png", final3, 0, 0);
+
 	playSound(theme);
-	startGame(title);
+	startGame(stun1);
 }
