@@ -509,5 +509,5 @@ int main() {
 	final4 = CreateObject("final2.png", final3, 0, 0);
 
 	playSound(theme);
-	startGame(stun1);
+	startGame(title);
 }
